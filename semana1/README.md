@@ -16,7 +16,7 @@ git clone https://github.com/rvanvelzen/lime.git
 docker pull php:5.6-cli
 ```
 
-* Para correr nuestro entorno dentro del contenedor de docker, navega a la carpeta del repositorio clonado de LIME y ejecuta el siguiente comando:
+* Para correr nuestro entorno dentro del contenedor de docker, navega a la carpeta raiz de tu proyecto y ejecuta el siguiente comando:
 
 ```bash
 docker run -it --rm -v $(pwd):/app -w /app php:5.6-cli bash
