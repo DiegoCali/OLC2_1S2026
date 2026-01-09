@@ -34,3 +34,11 @@ printf "deb [trusted=yes] http://archive.debian.org/debian stretch main\n" > /et
 
 >[!NOTE]
 > LIME es SOLO un generador de parser, por lo tanto dejé una ayuda para generar un scanner lexico en php con un pequeñlo script en python llamado `lexer_gen.py` aprenderemos como utilizarlo y como conectar el Lexer con el Parser generado por LIME.
+
+## Contenido
+
+1. Veremos como servir un frontend minimalista en PHP para probar nuestro parser.
+2. Implementaremos un lexer en PHP para tokenizar las expresiones binarias.
+3. Crearemos un parser con LIME para parsear las expresiones binarias. Suman, resta, multiplicación.
+4. Implementaremos el patrón de diseño visitor para evaluar las expresiones binarias parseadas.
+5. Probamos nuestro parser y visitor con diferentes expresiones binarias desde el frontend en PHP.

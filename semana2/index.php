@@ -15,11 +15,10 @@
         <input type="submit" value="Calcular">
     </form>
 <?php
-require_once("../lime/parse_engine.php");
-require_once("calc.class");
-require_once("Lexer.php");
+require_once("bootstrap.php");
 
-$parser = new parse_engine(new calc());
+$grammar = new calc();
+$parser = new parse_engine($grammar);
 
 echo "<h2>Resultado:</h2>";
 if (!empty($input)) {
@@ -32,11 +31,14 @@ if (!empty($input)) {
             $val = $token[1];
 
             if ($tok == "EOF") {
-                $parser->eat_eof();
+                $ast = $parser->eat_eof();
                 break;
             }
             $parser->eat($tok, $val);
-        }
+        }  
+        $interpreter = new Interpreter();
+        $result = $ast->accept($interpreter);   
+        echo "El resultado de la expresión '" . htmlspecialchars($input) . "' es: " . $result;       
     }catch(Exception $e) {
         echo "Error: " . $e->getMessage();
     }

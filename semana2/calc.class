@@ -142,71 +142,57 @@ class calc extends lime_parser {
     // (0) stmt :=  exp
     $result = reset($tokens);
 
-    echo ' -> ';
-    echo $tokens[0][0] . ' = ' . $tokens[0][1];
-    echo "\n";
+    // $tokens[0] es ahora un AST
+    $result = $tokens[0];
   }
 
   function reduce_1_exp_1($tokens, &$result) {
     // (1) exp :=  num
     $result = reset($tokens);
 
-    $result = array($tokens[0], $tokens[0]);
+    $result = new NumberExpression($tokens[0], null);
   }
 
   function reduce_2_exp_2($tokens, &$result) {
     // (2) exp :=  exp  '+'  exp
     $result = reset($tokens);
 
-    $result = array(
-      '(' . $tokens[0][0] . ' + ' . $tokens[2][0] . ')',
-       $tokens[0][1] + $tokens[2][1]
-    );
+    $result = new BinaryExpression($tokens[0], '+', $tokens[2], null);
   }
 
   function reduce_3_exp_3($tokens, &$result) {
     // (3) exp :=  exp  '-'  exp
     $result = reset($tokens);
 
-    $result = array(
-      '(' . $tokens[0][0] . ' - ' . $tokens[2][0] . ')',
-       $tokens[0][1] - $tokens[2][1]
-    );
+    $result = new BinaryExpression($tokens[0], '-', $tokens[2], null);
   }
 
   function reduce_4_exp_4($tokens, &$result) {
     // (4) exp :=  exp  '*'  exp
     $result = reset($tokens);
 
-    $result = array(
-      '(' . $tokens[0][0] . ' * ' . $tokens[2][0] . ')',
-       $tokens[0][1] * $tokens[2][1]
-    );
+    $result = new BinaryExpression($tokens[0], '*', $tokens[2], null);
   }
 
   function reduce_5_exp_5($tokens, &$result) {
     // (5) exp :=  '+'  exp
     $result = reset($tokens);
 
-    $result = array(
-      '(+' . $tokens[1][0] . ')',
-       +$tokens[1][1]
-    );
+    $result = new UnaryExpression('+', $tokens[1], null);
   }
 
   function reduce_6_exp_6($tokens, &$result) {
     // (6) exp :=  '-'  exp
     $result = reset($tokens);
 
-    $result = array(
-      '(-' . $tokens[1][0] . ')',
-       -$tokens[1][1]
-    );
+    $result = new UnaryExpression('-', $tokens[1], null);
   }
 
   function reduce_7_exp_7($tokens, &$result) {
     // (7) exp :=  '('  exp  ')'
-    $result = $tokens[1];
+    $result = reset($tokens);
+
+    $result = new AgroupedExpression($tokens[1], null);
   }
 
   function reduce_8_start_1($tokens, &$result) {
@@ -274,5 +260,5 @@ class calc extends lime_parser {
   );
 }
 
-// Time: 0.0085330009460449 seconds
-// Memory: 1850520 bytes
+// Time: 0.0088529586791992 seconds
+// Memory: 1846392 bytes

@@ -6,48 +6,34 @@
 %token '*' "multiplication operator (*)"
 
 %left '+' '-'
-%left '*' 
+%left '*'
 %right T_INC
 
 stmt = exp {
-    echo ' -> ';
-    echo $1[0] . ' = ' . $1[1];
-    echo "\n";
+    // $1 es ahora un AST
+    $$ = $1;
 }
 .
 
 exp = num {
-    $$ = array($1, $1);
-  }
+    $$ = new NumberExpression($1, null);
+}
 | exp '+' exp {
-    $$ = array(
-      '(' . $1[0] . ' + ' . $3[0] . ')',
-       $1[1] + $3[1]
-    );
-  }
+    $$ = new BinaryExpression($1, '+', $3, null);
+}
 | exp '-' exp {
-    $$ = array(
-      '(' . $1[0] . ' - ' . $3[0] . ')',
-       $1[1] - $3[1]
-    );
-  }
+    $$ = new BinaryExpression($1, '-', $3, null);
+}
 | exp '*' exp {
-    $$ = array(
-      '(' . $1[0] . ' * ' . $3[0] . ')',
-       $1[1] * $3[1]
-    );
-  }
+    $$ = new BinaryExpression($1, '*', $3, null);
+}
 | '+' exp %prec T_INC {
-    $$ = array(
-      '(+' . $2[0] . ')',
-       +$2[1]
-    );
-  }
+    $$ = new UnaryExpression('+', $2, null);
+}
 | '-' exp %prec T_INC {
-    $$ = array(
-      '(-' . $2[0] . ')',
-       -$2[1]
-    );
-  }
-| '(' exp/$ ')' 
+    $$ = new UnaryExpression('-', $2, null);
+}
+| '(' exp ')' {
+    $$ = new AgroupedExpression($2, null);
+}
 .
