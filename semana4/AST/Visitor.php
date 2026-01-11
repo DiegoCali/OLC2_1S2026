@@ -8,7 +8,10 @@ interface Visitor {
     public function visitBooleanExpression(BooleanExpression $expr);
     public function visitPrintStatement(PrintStatement $expr);
     public function visitVarDclStatement(VarDclStatement $expr);
+    public function visitVarAssignStatement(VarAssignStatement $expr);
     public function visitRefVarStatement(RefVarStatement $expr);
     public function visitBlockStatement(BlockStatement $expr);
     public function visitIfStatement(IfStatement $expr);
+    public function visitWhileStatement(WhileStatement $expr);
+    public function visitFlowStatement(FlowStatement $expr);
 }

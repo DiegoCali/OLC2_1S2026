@@ -39,6 +39,8 @@ class Interpreter implements Visitor {
                 return (int) $left < $right;                           
             case '>':
                 return (int) $left > $right;
+            case '==':
+                return (int) $left == $right;
             default:
                 throw new Exception("Unknown binary operator: " . $expr->operator);
         }
@@ -65,7 +67,13 @@ class Interpreter implements Visitor {
     public function visitVarDclStatement(VarDclStatement $expr) {
         $value = $expr->expression->accept($this);
         $key = $expr->id;
-        $this->env->set($key, $value);
+        $this->env->set($key, $value);        
+    }
+
+    public function visitVarAssignStatement(VarAssignStatement $expr){
+        $value = $expr->expr->accept($this);
+        $key = $expr->id;
+        $this->env->assign($key, $value);
     }
 
     public function visitRefVarStatement(RefVarStatement $expr){        
@@ -77,7 +85,11 @@ class Interpreter implements Visitor {
         $prevEnv = $this->env;
         $this->env = new Environment($prevEnv);
         foreach ($expr->stmts as $stmt) {
-            $stmt->accept($this);
+            $retVal = $stmt->accept($this);
+            if ($retVal instanceof FlowType) {                
+                $this->env = $prevEnv;                
+                return $retVal;
+            }
         }
         $this->env = $prevEnv;
     }
@@ -85,10 +97,39 @@ class Interpreter implements Visitor {
     public function visitIfStatement(IfStatement $expr){
         $condition = filter_var($expr->cond->accept($this), FILTER_VALIDATE_BOOLEAN);
         if ($condition) {
-            $expr->machedBlock->accept($this);
+            $retVal = $expr->machedBlock->accept($this);
+            if ($retVal instanceof FlowType) {
+                return $retVal;
+            }
         } 
         if (!$condition and $expr->elseBlock !== null) {
-            $expr->elseBlock->accept($this);
+            $retVal = $expr->elseBlock->accept($this);
+            if ($retVal instanceof FlowType) {
+                return $retVal;
+            }
         }
+    }
+
+    public function visitWhileStatement(WhileStatement $expr){
+        do {
+            $condition = filter_var($expr->cond->accept($this), FILTER_VALIDATE_BOOLEAN);
+            if (!$condition) {                
+                break;
+            }
+            $retVal = $expr->block->accept($this);            
+            if ($retVal instanceof BreakType) {    
+                echo "Haciendo break";
+                break;
+            }
+        } while ($condition);
+    }
+
+    public function visitFlowStatement(FlowStatement $expr){        
+        if ($expr->type === 1) {
+            return new ContinueType();
+        } elseif ($expr->type === 2) {            
+            return new BreakType();
+        }
+        throw new Exception("Unkown flow statement");
     }
 }

@@ -2,6 +2,7 @@
 
 // AST
 require_once __DIR__ . "/AST/Nodes.php";
+require_once __DIR__ . "/AST/FlowTypes.php";
 require_once __DIR__ . "/AST/Visitor.php";
 require_once __DIR__ . "/AST/Interpreter.php";
 require_once __DIR__ . "/AST/Environment.php";

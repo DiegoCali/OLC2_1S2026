@@ -135,6 +135,22 @@ class VarDclStatement extends Expression {
     }
 }
 
+class VarAssignStatement extends Expression {
+    public $id;
+    public $expr;
+    public function __construct($id, $expr, $location) {
+        parent::__construct($location);
+        $this->id = $id;
+        $this->expr = $expr;
+    }
+    public function accept(Visitor $visitor) {
+        return $visitor->visitVarAssignStatement($this);
+    }
+    public function __toString() {
+        return "VarAssignStatement(". $this->id . ", ". $this->expr .")";
+    }
+}
+
 class RefVarStatement extends Expression {
     public $id;
     public function __construct($id, $location) {
@@ -176,5 +192,41 @@ class IfStatement extends Expression {
 
     public function accept(Visitor $visitor) {
         return $visitor->visitIfStatement($this);
+    }
+
+    public function __toString() {
+        return "IfStatement(" . $this->cond . ", " . $this->machedBlock . ", " . $this->elseBlock .")";
+    }
+}
+
+class WhileStatement extends Expression {
+    public $cond;
+    public $block;
+    public function __construct($cond, $block, $location) {
+        parent::__construct($location);
+        $this->cond = $cond;
+        $this->block = $block;
+    }
+    public function accept(Visitor $visitor) {
+        return $visitor->visitWhileStatement($this);
+    }
+    public function __toString() {
+        return "WhileStatement(" . $this->cond . ", ". $this->block . ")";
+    }
+}
+
+class FlowStatement extends Expression {
+    public $type;
+    public $retval;
+    public function __construct($type, $retval=null, $location) {
+        parent::__construct($location);
+        $this->type = $type;
+        $this->retval = $retval;
+    }
+    public function accept(Visitor $visitor) {
+        return $visitor->visitFlowStatement($this);
+    }
+    public function __toString() {
+        return "FlowStatement(". $this->type. ", " . $this->retval . ")";
     }
 }

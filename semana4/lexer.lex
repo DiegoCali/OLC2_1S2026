@@ -5,6 +5,9 @@
 "false"                 return 'false';
 "if"                    return 'if';
 "else"                  return 'else';
+"while"                 return 'while';
+"continue"              return 'continue';
+"break"                 return 'break';
 
 "var"                   return 'var';
 [a-zA-Z_][a-zA-Z0-9_]*  return 'id';
