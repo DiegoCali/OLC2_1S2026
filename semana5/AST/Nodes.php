@@ -246,3 +246,21 @@ class CallStatement extends Expression {
         return "CallStatement(" .  $this->callee . ", ". $this->args .")";
     }
 }
+
+class FunctionDclStatement extends Expression {
+    public $id;
+    public $params;
+    public $block;
+    public function __construct($id, $params=null, $block, $location) {
+        parent::__construct($location);
+        $this->id = $id;
+        $this->params= $params;
+        $this->block = $block;
+    }   
+    public function accept(Visitor $visitor) {
+        return $visitor->visitFunctionDclStatement($this);
+    }
+    public function __toString() {
+        return "FunctionDclStatement(". $this->id . ")";
+    }
+}

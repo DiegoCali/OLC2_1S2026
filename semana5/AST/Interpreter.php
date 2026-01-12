@@ -1,7 +1,7 @@
 <?php
 class Interpreter implements Visitor {
     public $output = "";
-    private $env;
+    public $env;
     public function __construct() {
         $this->output = "\n";
         $this->env = new Environment();
@@ -133,6 +133,12 @@ class Interpreter implements Visitor {
             return new ContinueType();
         } elseif ($expr->type === 2) {            
             return new BreakType();
+        } elseif ($expr->type === 3) {
+            if ($expr->retval !== null) {
+                $value = $expr->retval->accept($this);
+                return new ReturnType($value);
+            }
+            return new ReturnType();
         }
         throw new Exception("Unkown flow statement");
     }
@@ -149,8 +155,14 @@ class Interpreter implements Visitor {
             throw new Exception("No es invocable.");
         }
         if ($function->get_arity() !== count($args)) {
+            echo $function->get_arity();
             throw new Exception("Numero incorrecto de argumentos.");
         }
         return $function->invoke($this, $args);
+    }
+
+    public function visitFunctionDclStatement(FunctionDclStatement $expr){
+        $func = new Foreign($expr, $this->env);
+        $this->env->set($expr->id, $func);
     }
 }

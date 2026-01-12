@@ -7,6 +7,7 @@ require_once __DIR__ . "/AST/Visitor.php";
 require_once __DIR__ . "/AST/Interpreter.php";
 require_once __DIR__ . "/AST/Environment.php";
 require_once __DIR__ . "/AST/Functions.php";
+require_once __DIR__ . "/AST/Foreigns.php";
 
 // Parser engine + parser generado
 require_once "../lime/parse_engine.php";

@@ -8,6 +8,7 @@
 "while"                 return 'while';
 "continue"              return 'continue';
 "break"                 return 'break';
+"return"                return 'return';
 "func"                  return 'func';
 
 "var"                   return 'var';

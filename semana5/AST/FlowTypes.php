@@ -16,3 +16,13 @@ class BreakType extends FlowType{
         return "BreakType";
     }
 }
+
+class ReturnType extends FlowType {
+    public $retVal;
+    public function __construct($retVal = null) {
+        $this->retVal = $retVal;
+    }
+    public function __tostring() {
+        return "ReturnType";
+    }
+}

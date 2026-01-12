@@ -169,6 +169,38 @@ class Lexer {
                 $end_col = $this->col;
                 return array('break', array('value' => $lexeme, 'location' => array('start' => array('line'=>$start_line,'col'=>$start_col), 'end' => array('line'=>$end_line,'col'=>$end_col))));
             }
+            if (preg_match('/\Greturn/A', $this->input, $m, 0, $this->pos)) {
+                $lexeme = $m[0];
+                $start_line = $this->line;
+                $start_col = $this->col;
+                $lines = explode("\n", $lexeme);
+                if (count($lines) > 1) {
+                    $this->line += count($lines) - 1;
+                    $this->col = strlen(end($lines)) + 1;
+                } else {
+                    $this->col += strlen($lexeme);
+                }
+                $this->pos += strlen($lexeme);
+                $end_line = $this->line;
+                $end_col = $this->col;
+                return array('return', array('value' => $lexeme, 'location' => array('start' => array('line'=>$start_line,'col'=>$start_col), 'end' => array('line'=>$end_line,'col'=>$end_col))));
+            }
+            if (preg_match('/\Gfunc/A', $this->input, $m, 0, $this->pos)) {
+                $lexeme = $m[0];
+                $start_line = $this->line;
+                $start_col = $this->col;
+                $lines = explode("\n", $lexeme);
+                if (count($lines) > 1) {
+                    $this->line += count($lines) - 1;
+                    $this->col = strlen(end($lines)) + 1;
+                } else {
+                    $this->col += strlen($lexeme);
+                }
+                $this->pos += strlen($lexeme);
+                $end_line = $this->line;
+                $end_col = $this->col;
+                return array('func', array('value' => $lexeme, 'location' => array('start' => array('line'=>$start_line,'col'=>$start_col), 'end' => array('line'=>$end_line,'col'=>$end_col))));
+            }
             if (preg_match('/\Gvar/A', $this->input, $m, 0, $this->pos)) {
                 $lexeme = $m[0];
                 $start_line = $this->line;

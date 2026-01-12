@@ -15,4 +15,5 @@ interface Visitor {
     public function visitWhileStatement(WhileStatement $expr);
     public function visitFlowStatement(FlowStatement $expr);
     public function visitCallStatement(CallStatement $expr);
+    public function visitFunctionDclStatement(FunctionDclStatement $expr);
 }
