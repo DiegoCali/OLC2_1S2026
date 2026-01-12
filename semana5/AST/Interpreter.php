@@ -5,6 +5,10 @@ class Interpreter implements Visitor {
     public function __construct() {
         $this->output = "\n";
         $this->env = new Environment();
+        $this->embeded = require __DIR__ ."/Natives.php";
+        foreach ($embeded as $key => $func) {
+            $this->env->set($key, $func);
+        }
     }
 
     public function visitExpression(Expression $expr) {
@@ -131,5 +135,22 @@ class Interpreter implements Visitor {
             return new BreakType();
         }
         throw new Exception("Unkown flow statement");
+    }
+
+    public function visitCallStatement(CallStatement $expr){
+        $function = $expr->callee->accept($this);
+        $args = array();
+        if ($expr->args !== null) {            
+            foreach ($expr->args as $arg) {
+                $args[] = $arg->accept($this);
+            }
+        }
+        if (!($function instanceof Invocable)) {            
+            throw new Exception("No es invocable.");
+        }
+        if ($function->get_arity() !== count($args)) {
+            throw new Exception("Numero incorrecto de argumentos.");
+        }
+        return $function->invoke($this, $args);
     }
 }

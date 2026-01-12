@@ -230,3 +230,19 @@ class FlowStatement extends Expression {
         return "FlowStatement(". $this->type. ", " . $this->retval . ")";
     }
 }
+
+class CallStatement extends Expression {
+    public $callee;
+    public $args;
+    public function __construct($callee, $args=null, $location) {
+        parent::__construct($location);
+        $this->callee = $callee;
+        $this->args = $args;
+    }
+    public function accept(Visitor $visitor) {
+        return $visitor->visitCallStatement($this);
+    }
+    public function __toString() {
+        return "CallStatement(" .  $this->callee . ", ". $this->args .")";
+    }
+}

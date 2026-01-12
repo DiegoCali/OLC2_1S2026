@@ -8,11 +8,14 @@
 "while"                 return 'while';
 "continue"              return 'continue';
 "break"                 return 'break';
+"func"                  return 'func';
 
 "var"                   return 'var';
 [a-zA-Z_][a-zA-Z0-9_]*  return 'id';
 "="                     return '=';
 ";"                     return ';';
+","                     return ',';
+"."                     return '.';
 
 [0-9]+(\.[0-9]+)?       return 'num';
 
