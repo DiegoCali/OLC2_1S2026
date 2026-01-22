@@ -150,18 +150,18 @@ class VarDclStatement extends Node {
 }
 
 class VarAssignStatement extends Node {
-    public $id;
+    public $refVar;
     public $expr;
-    public function __construct($id, $expr, $location) {
+    public function __construct($refVar, $expr, $location) {
         parent::__construct($location);
-        $this->id = $id;
+        $this->refVar = $refVar;
         $this->expr = $expr;
     }
     public function accept(Visitor $visitor) {
         return $visitor->visitVarAssignStatement($this);
     }
     public function __toString() {
-        return "VarAssignStatement(". $this->id . ", ". $this->expr .")";
+        return "VarAssignStatement(". $this->refVar . ", ". $this->expr .")";
     }
 }
 

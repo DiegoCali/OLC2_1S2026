@@ -71,10 +71,9 @@ class Interpreter implements Visitor {
     }
 
     public function visitPrintStatement(PrintStatement $node) {
-        $value = $node->expression->accept($this);   
-        if (is_array($value)) {
-            print_r($value);
-            return;
+        $value = $node->expression->accept($this);           
+        if ($value === null) {
+            $value = "nil";
         }
         $this->output .= $value . "\n";
     }
@@ -87,9 +86,41 @@ class Interpreter implements Visitor {
 
     public function visitVarAssignStatement(VarAssignStatement $node){
         $value = $node->expr->accept($this);
-        $key = $node->id;
+        if ($node->refVar instanceof ArrayAccessExp) {            
+            $this->assignArray($node->refVar, $value);            
+            return;
+        }
+        $key = $node->refVar->id;
         $this->env->assign($key, $value);
     }
+
+    private function assignArray(ArrayAccessExp $node, $value) {
+        $indexes = [];
+        while ($node->base !== null){
+            $index = $node->index->accept($this);
+            array_unshift($indexes, $index);
+            if ($node->base instanceof ArrayAccessExp) {
+                $node = $node->base;
+            } elseif ($node->base instanceof RefVarStatement) {
+                $arrayId = $node->base->id;
+                $array = $this->env->get($arrayId);
+                // Whe get the reference to the array and navigate to the correct position
+                $ref = &$array;
+                foreach ($indexes as $idx) {
+                    // Navigate to the next level
+                    $ref = &$ref[$idx];
+                }
+                // Finally assign the value to the referenced position
+                $ref = $value;
+                // Update the array in the environment
+                $this->env->assign($arrayId, $array);
+                break;
+            } else {
+                throw new Exception("Invalid array access base.");
+            }
+        }
+    }
+
 
     public function visitRefVarStatement(RefVarStatement $node){        
         $key = $node->id;                
