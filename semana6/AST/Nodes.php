@@ -281,18 +281,32 @@ class FunctionDclStatement extends Node {
     }
 }
 
-class ArrayExpression extends Node {
-    public $values;    
-    public $dimensions;
-    public function __construct($values, $dimensions, $location) {
+abstract class ArrayNode extends Node {}
+
+class ArrayInitDcl extends ArrayNode {
+    public $elements;
+    public function __construct($elements, $location) {
         parent::__construct($location);
-        $this->values = $values;        
+        $this->elements = $elements;
+    }
+    public function accept(Visitor $visitor) {
+        return $visitor->visitArrayInitDcl($this);
+    }
+    public function __toString() {
+        return "ArrayInitDcl(" . $this->elements . ")";
+    }
+}
+
+class ArrayNewDcl extends ArrayNode {
+    public $dimensions;
+    public function __construct($dimensions, $location) {
+        parent::__construct($location);
         $this->dimensions = $dimensions;
     }
     public function accept(Visitor $visitor) {
-        return $visitor->visitArrayExpression($this);
+        return $visitor->visitArrayNewDcl($this);
     }
-    public function __toString() {        
-        return "ArrayExpression(" . count($this->dimensions) . ")";
+    public function __toString() {
+        return "ArrayNewDcl(" . $this->dimensions . ")";
     }
 }

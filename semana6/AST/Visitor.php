@@ -17,5 +17,6 @@ interface Visitor {
     public function visitFlowStatement(FlowStatement $node);
     public function visitCallStatement(CallStatement $node);
     public function visitFunctionDclStatement(FunctionDclStatement $node);    
-    public function visitArrayExpression(ArrayExpression $node);
+    public function visitArrayInitDcl(ArrayInitDcl $node);
+    public function visitArrayNewDcl(ArrayNewDcl $node);
 }

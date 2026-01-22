@@ -163,10 +163,10 @@ params = /* no params */ {
 .
 
 array_exp = '{' args '}' {
-    $$ = new ArrayExpression($2, null, $1['location']);
+    $$ = new ArrayInitDcl($2, $1['location']);
 }
 | new var dimensions {
-    $$ = new ArrayExpression(null, $3, $1['location']);
+    $$ = new ArrayNewDcl($3, $1['location']);
 }
 .
 

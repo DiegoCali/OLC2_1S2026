@@ -1617,14 +1617,14 @@ class grammar extends lime_parser {
     // (41) array_exp :=  '{'  args  '}'
     $result = reset($tokens);
 
-    $result = new ArrayExpression($tokens[1], null, $tokens[0]['location']);
+    $result = new ArrayInitDcl($tokens[1], $tokens[0]['location']);
   }
 
   function reduce_42_array_exp_2($tokens, &$result) {
     // (42) array_exp :=  new  var  dimensions
     $result = reset($tokens);
 
-    $result = new ArrayExpression(null, $tokens[2], $tokens[0]['location']);
+    $result = new ArrayNewDcl($tokens[2], $tokens[0]['location']);
   }
 
   function reduce_43_dimensions_1($tokens, &$result) {
@@ -2009,5 +2009,5 @@ class grammar extends lime_parser {
   );
 }
 
-// Time: 0.04221510887146 seconds
-// Memory: 6718264 bytes
+// Time: 0.11447906494141 seconds
+// Memory: 6718600 bytes

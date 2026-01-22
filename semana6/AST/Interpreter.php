@@ -71,7 +71,11 @@ class Interpreter implements Visitor {
     }
 
     public function visitPrintStatement(PrintStatement $node) {
-        $value = $node->expression->accept($this);              
+        $value = $node->expression->accept($this);   
+        if (is_array($value)) {
+            print_r($value);
+            return;
+        }
         $this->output .= $value . "\n";
     }
 
@@ -88,7 +92,7 @@ class Interpreter implements Visitor {
     }
 
     public function visitRefVarStatement(RefVarStatement $node){        
-        $key = $node->id;        
+        $key = $node->id;                
         return $this->env->get($key);
     }
 
@@ -175,40 +179,42 @@ class Interpreter implements Visitor {
         $this->env->set($node->id, $func);
     }    
 
-    public function visitArrayExpression(ArrayExpression $node){                    
-        $level = 0;
-        $defaut = array();
-        # Construcción de Array new var[num][num]...[...]
-        if ($node->values === null) {
-            foreach ($node->dimensions as $dimension) {
-                $length = $dimension->accept($this);                
-                if (!is_int($length)) {
-                    throw new Exception("Coloque un valor válido en array");
-                }
-                if ($level == 0) {
-                    $defaut = array_fill(0, $length,null);                        
-                } else {
-                    $newDimension = array_fill(0, $length, $defaut);
-                    $defaut = $newDimension;
-                }
-                $level++;
-            }        
-            $node->values = $defaut;
-            return $node;        
+    public function visitArrayInitDcl(ArrayInitDcl $node) {
+        $elements = array();
+        foreach ($node->elements as $element) {
+            $elements[] = $element->accept($this);
         }
-        # Construcción de Array {{1,2,3,4},{5,6,7,8},...{...}}                
-        $length = count($node->values);
-        $node->dimensions[] = $length;
-        $accepted_vals = array();
-        foreach ($node->values as $dimension) {
-            $result = $dimension->accept($this);
-            $accepted_vals[] = $result;
-            if (!($result instanceof ArrayExpression)) {                                
-                return $node;
-            } else {
-                $node->dimensions = array_merge($node->dimensions, $result->dimensions);
-                return $node;
+        return $elements;
+    }
+
+    public function visitArrayNewDcl(ArrayNewDcl $node) {
+        $dims = [];
+
+        foreach ($node->dimensions as $dimExpr) {
+            $value = $dimExpr->accept($this);
+
+            if (!is_int($value) || $value < 0) {
+                throw new Exception("Dimensión inválida de array");
             }
-        }                    
+
+            $dims[] = $value;
+        }
+        
+        return $this->allocate($dims, 0);
+    }
+
+    private function allocate($dims, $level) {
+        $size = $dims[$level];
+
+        if ($level === count($dims) - 1) {
+            return array_fill(0, $size, null);
+        }
+
+        $arr = [];
+        for ($i = 0; $i < $size; $i++) {
+            $arr[] = $this->allocate($dims, $level + 1);
+        }
+
+        return $arr;
     }
 }
