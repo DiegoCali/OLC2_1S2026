@@ -166,12 +166,10 @@ class VarAssignStatement extends Node {
 }
 
 class RefVarStatement extends Node {
-    public $id;
-    public $dimensions;
-    public function __construct($id, $dimensions=null, $location) {
+    public $id;    
+    public function __construct($id, $location) {
         parent::__construct($location);
         $this->id = $id;
-        $this->dimensions = $dimensions;
     }
     public function accept(Visitor $visitor) {
         return $visitor->visitRefVarStatement($this);
@@ -308,5 +306,21 @@ class ArrayNewDcl extends ArrayNode {
     }
     public function __toString() {
         return "ArrayNewDcl(" . $this->dimensions . ")";
+    }
+}
+
+class ArrayAccessExp extends Node {
+    public $base;
+    public $index;
+    public function __construct($base, $index, $location) {
+        parent::__construct($location);
+        $this->base = $base;
+        $this->index = $index;
+    }
+    public function accept(Visitor $visitor) {
+        return $visitor->visitArrayAccessExp($this);
+    }
+    public function __toString() {
+        return "ArrayAccessExp(" . $this->base . ", " . $this->index . ")";
     }
 }

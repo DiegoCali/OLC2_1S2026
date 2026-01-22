@@ -217,4 +217,23 @@ class Interpreter implements Visitor {
 
         return $arr;
     }
+
+    public function visitArrayAccessExp(ArrayAccessExp $node) {
+        $container = $node->base->accept($this);
+        $index = $node->index->accept($this);
+
+        if (!is_array($container)) {
+            throw new Exception("Intento de indexar un valor que no es un array");
+        }
+
+        if (!is_int($index)) {
+            throw new Exception("Índice de array no entero");
+        }
+
+        if (!array_key_exists($index, $container)) {
+            throw new Exception("Índice fuera de rango");
+        }
+
+        return $container[$index];
+    }
 }

@@ -19,4 +19,5 @@ interface Visitor {
     public function visitFunctionDclStatement(FunctionDclStatement $node);    
     public function visitArrayInitDcl(ArrayInitDcl $node);
     public function visitArrayNewDcl(ArrayNewDcl $node);
+    public function visitArrayAccessExp(ArrayAccessExp $node);
 }

@@ -119,9 +119,6 @@ exp = postfix {
 | array_exp {
     $$ = $1;
 }
-| id dimensions {
-    $$ = new RefVarStatement($1['value'], $2, $1['location']);
-}
 .
 
 postfix = primitive {
@@ -130,13 +127,16 @@ postfix = primitive {
 | postfix '(' args ')' {
     $$ = new CallStatement($1, $3, $1->location);
 }
+| postfix '[' exp ']' {
+    $$ = new ArrayAccessExp($1, $3, $1->location);
+}
 .
 
 primitive = num {
     $$ = new NumberExpression($1['value'], $1['location']);
 }
 | id {
-    $$ = new RefVarStatement($1['value'], null, $1['location']);
+    $$ = new RefVarStatement($1['value'], $1['location']);
 }
 | string {
     $$ = new StringExpression($1['value'], $1['location']);
