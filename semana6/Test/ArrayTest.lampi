@@ -18,7 +18,7 @@ func bubbleSort(arr, n) {
     }
     return arr;
 }
-var diego = "123";
+var string1 = "123";
 var datos = {5, 3, 8, 1, 2};
 
 print("Antes:");
