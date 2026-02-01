@@ -1,0 +1,63 @@
+# Composer
+/vendor/
+**/vendor/
+
+# ANTLR
+ANTLRv4/
+**/ANTLRv4/
+*.tokens
+*.interp
+*Lexer.php
+*Parser.php
+*Listener.php
+*Visitor.php
+*BaseListener.php
+*BaseVisitor.php
+
+# VSCode
+.vscode/
+
+#################################
+# PHP
+#################################
+*.log
+*.cache
+*.tmp
+*.bak
+*.swp
+*.swo
+
+#################################
+# Composer
+#################################
+/vendor/
+/composer.phar
+/composer.lock
+
+#################################
+# ANTLR
+#################################
+*.tokens
+*.interp
+*Lexer.php
+*Parser.php
+*Listener.php
+*Visitor.php
+*BaseListener.php
+*BaseVisitor.php
+/antlr/
+/ANTLR/
+/ANTLRv4/
+
+#################################
+# IDEs / Editors
+#################################
+.vscode/
+.idea/
+*.iml
+
+#################################
+# OS
+#################################
+.DS_Store
+Thumbs.db
